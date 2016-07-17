@@ -22,44 +22,53 @@ web.auth.test().then(function(res) {
   rtm.start();
 });
 
-var respondToMessage = function(message) {
-  let channel = message.channel;
+let receiveMessage = function(message) {
+  let text = message.text;
 
-  if (message.text && message.text.match(/80s/)) {
-
-    rtm.sendMessage('Generating...', channel);
-    let userId = message.user;
-    web.users.info(userId).then(function(res) {
-
-      let profilePictureUrl = res.user.profile.image_original;
-
-      // user.profile.image_original isn't set for people using Gravatar. Use
-      // image_512 instead.
-      if (profilePictureUrl == undefined) {
-        profilePictureUrl = res.user.profile.image_512;
-      }
-
-      let parsedUrl = url.parse(profilePictureUrl);
-      let fileName = path.basename(parsedUrl.pathname);
-      let file = fs.createWriteStream(fileName);
-
-      fetch(profilePictureUrl).then(function(e) {
-        file.on('error', function(err) {
-          console.log(err);
-        });
-        e.body.on('end', function() {
-          glitchifyImage(fileName, channel, fileUpload);
-        });
-        e.body.pipe(file);
-      });
-
-    });
+  if (text) {
+    if (text.match(/80s/)) {
+      respondToMessage('glitchify', message);
+    } else if (text.match(/painting/)) {
+      respondToMessage('paintify', message);
+    }
   }
 };
 
-let glitchifyImage = function(fileName, channel, callback) {
-  let glitchify = child_process.spawn('./glitchify', [fileName]);
-  glitchify.on('close', function() {
+let respondToMessage = function(filterName, message) {
+  let channel = message.channel;
+  let userId = message.user;
+
+  rtm.sendMessage('Generating...', channel);
+  web.users.info(userId).then(function(res) {
+
+    let profilePictureUrl = res.user.profile.image_original;
+
+    // user.profile.image_original isn't set for people using Gravatar. Use
+    // image_512 instead.
+    if (profilePictureUrl == undefined) {
+      profilePictureUrl = res.user.profile.image_512;
+    }
+
+    let parsedUrl = url.parse(profilePictureUrl);
+    let fileName = path.basename(parsedUrl.pathname);
+    let file = fs.createWriteStream(fileName);
+
+    fetch(profilePictureUrl).then(function(e) {
+      file.on('error', function(err) {
+        console.log(err);
+      });
+      e.body.on('end', function() {
+        filterImage(filterName, fileName, channel, fileUpload);
+      });
+      e.body.pipe(file);
+    });
+
+  });
+}
+
+let filterImage = function(filterName, fileName, channel, callback) {
+  let filter = child_process.spawn('./lib/' + filterName, [fileName]);
+  filter.on('close', function() {
     callback(fileName, channel);
   });
 };
@@ -80,4 +89,4 @@ let fileUpload = function(fileName, channel) {
   });
 };
 
-rtm.on(RTM_EVENTS.MESSAGE, respondToMessage);
+rtm.on(RTM_EVENTS.MESSAGE, receiveMessage);

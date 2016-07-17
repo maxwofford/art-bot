@@ -4,16 +4,15 @@
 # Here there be dragons #
 #<======================>
 
-FILTERS=(desaturate
-         saturate
-         aberrate
-         vtear
-         # swirl
-         shiftNoise
-         channelBlur
-         # threshold
-         ampChannel
-        )
+FILTERS=(
+  desaturate
+  saturate
+  aberrate
+  vtear
+  shiftNoise
+  channelBlur
+  ampChannel
+)
 
 desaturate () {
   convert "$1" -modulate 100,50,100 -level 150 -sigmoidal-contrast 2x50%% "$1"
@@ -48,10 +47,6 @@ vtear () {
   shiftNoise "$1_offset.png"
   composite "$1_offset.png" "$1" -compose over "$1"
   rm "$1_offset.png"
-}
-
-paintingFilter () {
-  convert "$1" -mean-shift 15x15+10% "$1"
 }
 
 swirl () {

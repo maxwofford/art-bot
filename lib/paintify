@@ -1,0 +1,12 @@
+#!/bin/bash
+
+painting_filter () {
+  convert "$1" -mean-shift 15x15+10% "$1"
+}
+
+for file in "$@"
+do
+  convert "$file" -resize 1024 "$file"
+  painting_filter "$file"
+done
+echo "0"
