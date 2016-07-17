@@ -1,0 +1,7 @@
+main:
+  env_file: .env
+  build: .
+  volumes:
+    - ".:/app/src"
+  ports:
+    - "3000:3000"
