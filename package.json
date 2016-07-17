@@ -1,13 +1,16 @@
 {
-  "name": "mr-glitchy",
-  "version": "0.0.1",
-  "description": "",
+  "name": "art-bot",
+  "version": "0.0.2",
+  "description": "A robot that just wants to make your Slack channel a bit more pretty",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MaxWofford/art-bot"
+  },
   "main": "index.js",
   "dependencies": {
     "@slack/client": "^3.5.0",
     "node-fetch": "^1.5.3"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
