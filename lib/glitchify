@@ -86,7 +86,7 @@ do
   tmpfile=$(mktemp -t "$name-XXX$type")
   convert "$1" -resize 1024 "$1"
   cp "$file" "$tmpfile"
-  for (( i=0 ; i<=$((RANDOM%3+1)); i++ ));
+  for (( i=0 ; i<=$((RANDOM%7+1)); i++ ));
   do
     # Choose a random filter
     filter=${FILTERS[$RANDOM % ${#FILTERS[@]}]}
