@@ -28,7 +28,7 @@ let receiveMessage = function(message) {
   if (text) {
     if (text.match(/80s/)) {
       respondToMessage('glitchify', message);
-    } else if (text.match(/painting/)) {
+    } else if (text.match(/paint/)) {
       respondToMessage('paintify', message);
     }
   }
