@@ -1,0 +1,23 @@
+#!/bin/bash
+
+aberrate () {
+  width=$(convert "$1" -print "%w" /dev/null)
+  height=$(convert "$1" -print "%h" /dev/null)
+
+  # Channel shifts
+  mx=$(($width / -120))
+  my=$(($height / -150))
+  gx=$(($width / 200))
+  gy=$(($height / 250))
+  convert "$1" -virtual-pixel edge -channel M -fx "p[$mx,$my]" -channel G -fx "p[$gx, $gy]" "$1"
+}
+
+desaturate () {
+  convert "$1" -modulate 100,35,100 -level 150 -sigmoidal-contrast 2x50%% "$1"
+}
+
+for file in "$@"
+do
+  desaturate "$file"
+  aberrate "$file"
+done

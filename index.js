@@ -30,6 +30,8 @@ let receiveMessage = function(message) {
       respondToMessage('glitchify', message);
     } else if (text.match(/paint/)) {
       respondToMessage('paintify', message);
+    } else if (text.match(/green/) && text.match(/magenta/)) {
+      respondToMessage('green_and_magenta', message);
     }
   }
 };
